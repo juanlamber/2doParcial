@@ -4,7 +4,32 @@ import datetime
 from funciones import *
 from queue import LifoQueue
 
-#Establecer Clases
+class usuario:                                  #metodo cambiar contraseña
+    def __init__(self, nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna):
+        self.nombre_usu=nombre_usu
+        self.nombre = nombre
+        self.apellido=apellido
+        self.fecha_alta=datetime.datetime.now().time()
+        self.fecha_baja=None
+        self.dni=dni
+        self.telefono=telefono
+        self.mail=mail
+        self.direccion=direccion
+        self.contrasenna = contrasenna
+        
+
+class personal(usuario):
+    historico_empleados=1
+    def __init__(self,nombre, nombre_usu,  apellido, dni, telefono, mail, direccion, contrasenna):
+        super().__init__( nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna)
+        self.legajo=personal.historico_empleados
+        personal.historico_empleados+=1 
+        
+        
+class cliente(usuario):
+    def __init__(self, nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna):
+        super().__init__(nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna)
+        self.historialreserva=[]
 
 class hotel:                                                    #atributos de instancia, ya que la compania puede tener mas de un hotel.
     def __init__(self, lista_personal = ListaEnlazada(), lista_clientes_activos = ListaEnlazada(), pila_cuartos = LifoQueue(), dict_habitacion ={}):                   #Deberiámos hacer una matriz para los informes estadísticos?
@@ -48,65 +73,18 @@ class hotel:                                                    #atributos de in
                 self.lista_clientes_activos.delete(DNI)
             
 
-            
-
 hotelPOO = hotel()
-hotelPOO.agregar_habitacion(1, 50, 2, 8,7,7,7)
-print(hotelPOO.habitaciones)
-hotelPOO.modificar_personal()
+# hotelPOO.agregar_habitacion(1, 50, 2, 8,7,7,7,9)
+# print(hotelPOO.habitaciones)
+# hotelPOO.agregar_cuartosucio(1)
+# hotelPOO.agregar_cuartosucio(2)
+# for elementos in hotelPOO.pila_cuartos.queue:
+#     print(elementos)
+# hotelPOO.limpiar_cuarto()
+hotelPOO.modificar_persona()
+print(hotelPOO.lista_clientes_activos)
+hotelPOO.modificar_persona()
+print(hotelPOO.lista_clientes_activos)
 
-
-
-class usuario:                                  #metodo cambiar contraseña
-    def __init__(self, nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna):
-        self.nombre_usu=nombre_usu
-        self.nombre = nombre
-        self.apellido=apellido
-        self.fecha_alta=datetime.datetime.now().time()
-        self.fecha_baja=None
-        self.dni=dni
-        self.telefono=telefono
-        self.mail=mail
-        self.direccion=direccion
-        self.contrasenna = contrasenna
-        
-
-class personal(usuario):
-    historico_empleados=1
-    def __init__(self,nombre, nombre_usu,  apellido, dni, telefono, mail, direccion, contrasenna):
-        super().__init__( nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna)
-        self.legajo=personal.historico_empleados
-        personal.historico_empleados+=1 
-        
-        
-        
-class personal_limpieza(personal):
-    def __init__(self, nombre, apellido, dni, telefono, mail, direccion):
-        super().__init__(self, nombre, apellido, dni, telefono, mail, direccion)
-    
-            
-class personal_mantenimiento(personal):
-    def __init__(self, nombre, apellido, dni, telefono, mail, direccion):
-        super().__init__(self, nombre, apellido, dni, telefono, mail, direccion)
-         
-class cliente(usuario):
-    def __init__(self, nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna):
-        super().__init__(nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna)
-        self.historialreserva=[]
-    
-    # def realizar_reserva(): #poner en el arg todo lo que se necesite para realizar una reserva
-    #     res=reserva()
-    #     self.historialreserva.append(res)
-class reserva:
-    reservas={}
-    def __init__(self, codigo, cliente:cliente, ):
-        pass
-
-
-        
-
-
-##DENTRO DE UN INIT, NO DEBE HABER INPUTS
-##FALTAN LAS VERIFICACIONES 
 
 
