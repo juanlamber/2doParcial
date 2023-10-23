@@ -1,3 +1,4 @@
+from validaciones import *
 #Funciones listas enlazadas
 class Nodo:
     def __init__(self, value):
@@ -67,19 +68,18 @@ class ListaEnlazada:
         text += "None" # De qué otra manera podríamos agregarlo ?
         return text
     
-def ingresar_persona():
+def ingresar_persona(): 
     nombre = input("Ingrese un nombre: ")
     nombre_usu = input("Ingrese un nombre de usuario: ")
     apellido = input("Ingrese un apellido: ")
-    dni = input("Ingrese un DNI: ") # preguntar si son solo numeros
-    while dni.isdigit()==False or len(dni)!=8:
-        dni = input('El DNI ingresado no es valido, por favor, intentelo nuevamente: ')
-    telefono = input("Ingrese un telefono: ") # preguntar que sean solo numeros   #consideramos que el usuario ingresa solo numeros. 
-    while telefono.isdigit()==False or len(telefono)!=11:
-        telefono = input("El numero de telefono ingresado no es valido. Porfavor ingrese un telefono valido: ")
-    mail = input("Ingrese un mail: ")     # Validar que sea un mail con @ y todas las cosas con mails
+    dni= es_digito(8,'Dni')
+    telefono= es_digito(11,'Telefono')
+    mail = contiene('@', 'mail', 1)    # Validar que sea un mail con @ y todas las cosas con mails
     direccion = input("Ingrese una direccion: ")
-    contrasenna = input('Ingrese una contraseña: ')             #Validar requerimientos 
+    contrasenna = pedir_pword()                     #Validar requerimientos
+    
+    ##QUE HACEMOS CON EL SALIR?
+     
     return nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna
 
 #PASAR A VALIDACIONES.PY
