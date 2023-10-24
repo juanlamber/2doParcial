@@ -1,8 +1,9 @@
 #Importar librerias
 import numpy as np
 import datetime
-from funciones import *
+#from funciones import *
 from queue import LifoQueue
+
 
 class usuario:                                  #metodo cambiar contraseña
     def __init__(self, nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna):
@@ -16,7 +17,6 @@ class usuario:                                  #metodo cambiar contraseña
         self.mail=mail
         self.direccion=direccion
         self.contrasenna = contrasenna
-        
 
 class personal(usuario):
     historico_empleados=1
@@ -24,6 +24,38 @@ class personal(usuario):
         super().__init__( nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna)
         self.legajo=personal.historico_empleados
         personal.historico_empleados+=1 
+        
+   
+class personal_administrativo(personal):
+    def __init__(self, nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna):
+        super().__init__(nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna)
+
+
+pedro = personal_administrativo('pedro', 'fvjdfj', 'sndvjs', 12345678, 12345678901, 'jdfbjdf', 'jnfjndf', 'jsddskj')
+print(pedro.dni == 12345678)
+
+
+
+# class usuario:                                  #metodo cambiar contraseña
+#     def __init__(self, nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna):
+#         self.nombre_usu=nombre_usu
+#         self.nombre = nombre
+#         self.apellido=apellido
+#         self.fecha_alta=datetime.datetime.now().time()
+#         self.fecha_baja=None
+#         self.dni=dni
+#         self.telefono=telefono
+#         self.mail=mail
+#         self.direccion=direccion
+#         self.contrasenna = contrasenna
+        
+
+# class personal(usuario):
+#     historico_empleados=1
+#     def __init__(self,nombre, nombre_usu,  apellido, dni, telefono, mail, direccion, contrasenna):
+#         super().__init__( nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna)
+#         self.legajo=personal.historico_empleados
+#         personal.historico_empleados+=1 
         
         
 class cliente(usuario):
@@ -73,18 +105,29 @@ class hotel:                                                    #atributos de in
                 self.lista_clientes_activos.delete(DNI)
             
 
-hotelPOO = hotel()
-# hotelPOO.agregar_habitacion(1, 50, 2, 8,7,7,7,9)
-# print(hotelPOO.habitaciones)
-# hotelPOO.agregar_cuartosucio(1)
-# hotelPOO.agregar_cuartosucio(2)
-# for elementos in hotelPOO.pila_cuartos.queue:
-#     print(elementos)
-# hotelPOO.limpiar_cuarto()
-hotelPOO.modificar_persona()
-print(hotelPOO.lista_clientes_activos)
-hotelPOO.modificar_persona()
-print(hotelPOO.lista_clientes_activos)
+# hotelPOO = hotel()
+# # hotelPOO.agregar_habitacion(1, 50, 2, 8,7,7,7,9)
+# # print(hotelPOO.habitaciones)
+# # hotelPOO.agregar_cuartosucio(1)
+# # hotelPOO.agregar_cuartosucio(2)
+# # for elementos in hotelPOO.pila_cuartos.queue:
+# #     print(elementos)
+# # hotelPOO.limpiar_cuarto()
+# hotelPOO.modificar_persona()
+# print(hotelPOO.lista_clientes_activos)
+# hotelPOO.modificar_persona()
+# print(hotelPOO.lista_clientes_activos)
 
-
-
+        ##Administrador?? Podemos hacer una instancia de personal y almacenar su DNI en hotel
+def crear_usuario(self, valor):         #VALOR hace referencia a lo que ingresa el usuario en menu, puede ser personal admin, cliente o administrador
+    if valor.upper() == "PERSONAL":
+        nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna = ingresar_persona()
+        per = personal_administrativo(nombre_usu, nombre, apellido, dni, telefono, mail, direccion, contrasenna)
+        if self.agregar_usuario(per):                             #MEJORAR SI SE PUEDE                            
+            self.lista_personal.add_to_end(per)
+    elif valor.upper() =='CLIENTE':
+        nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna = ingresar_persona()
+        cli = cliente(nombre, nombre_usu, apellido, dni, telefono, mail, direccion, contrasenna)
+        if self.agregar_usuario(cli):
+            self.lista_clientes_activos.add_to_end(cli)
+    #MAS CONDENSADO

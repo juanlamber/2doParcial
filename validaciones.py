@@ -1,3 +1,4 @@
+##VALIDACIONES.PY
 
 def es_digito(largo, dato):
     """"
@@ -9,8 +10,6 @@ def es_digito(largo, dato):
             break
         valor = input('El {} ingresado no es valido, por favor, intentelo nuevamente: '.format(dato))
     return valor
-
-#print(es_digito(2, 'dni'))
 
 
 def contiene(caracter, dato, cantidad):
@@ -45,4 +44,3 @@ def pedir_pword():
         if pword.upper()=='SALIR':
             break
     return pword
-
