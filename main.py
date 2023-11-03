@@ -1,8 +1,6 @@
 #Importar librerias
 import numpy as np
-import datetime
 from funciones import *
-from queue import LifoQueue
 from validaciones import *
 from CLASES import *
 import pickle
@@ -14,15 +12,6 @@ try:
 except:
     hotelPOO = Hotel('2', '3')   
 
-#inicio
-
-# hotelPOO.crear_usuario("CLIENTE")
-# print(hotelPOO.lista_personal)
-# print(hotelPOO.dict_usu)
-# print(type(hotelPOO.dict_usu["sarme"]))
-# hotelPOO.crear_usuario("CLIENTE")
-# print(hotelPOO.lista_personal)
-# print(hotelPOO.dict_usu)
 print('HOTELPOO' + '\n'*2 + 'Bienvenido')
 
 
@@ -36,13 +25,35 @@ while inicio != 'SALIR':
             nombre = input("Ingrese su nombre de usuario: ")    #PEDIMOS EL NOMBRE DE USUARIO
             contrasenna = input("Ingrese su contraseña: ")      #PEDIMOS LA CONTRASEÑA 
             try:
-                if hotelPOO.dict_usu[nombre].contrasenna == contrasenna:    #VERICAMOS QUE EL USUARIO Y CONTRASEÑA COINCIDAN
-                
+                if hotelPOO.dict_usu[nombre].contrasenna == contrasenna and hotelPOO.dict_usu[nombre].fecha_baja==None:    #VERICAMOS QUE EL USUARIO Y CONTRASEÑA COINCIDAN
+                    inicio_sub=None
                     if nombre==hotelPOO.admin:  #MENU DEL ADMINISTRADOR
                         print('Administrador: ')
-                
+                        
+                        while inicio_sub != 'SALIR':
+                            inicio_sub=input('''Ingrese "1" si desea agregar personal administrativo  \n 
+                                             "2" si desea agregar personal de limpieza  \n 
+                                             "3" si desea agregar personal de mantenimiento \n 
+                                             "4" si desea eliminar algun empleado o algun cliente \n
+                                             "5" si desea visualizar el inventario del persona''') 
+                            match inicio_sub:
+                                    case '1':
+                                        hotelPOO.crear_usuario('PERSONAL ADMINISTRATIVO')
+                                    case '2':
+                                        hotelPOO.crear_personal_sin_usuario('PERSONAL LIMPIEZA')
+                                    case '3':
+                                        hotelPOO.crear_personal_sin_usuario('PERSONAL MANTENIMIENTO')
+                                    case '4':
+                                        emple=hotelPOO.eliminar_persona()
+                                        hotelPOO.identificar_tipo_empleado(emple) if emple is not None else None
+                                    case '5':
+                                        print('La cantidad de Personales Administrativos es: ', hotelPOO.cant_administrativo)
+                                        print('La cantidad de Personales de Limpieza es: ', hotelPOO.cant_limpieza)
+                                        print('La cantidad de Personales de Mantenimiento es: ', hotelPOO.cant_mantenimiento)
                     elif isinstance(hotelPOO.dict_usu[nombre], Personal_Administrativo): #MENU DEL PERSONAL ADMINISTRATIVO
                         print('Personal administrativo: ')
+                        
+                        
                     
                     elif isinstance(hotelPOO.dict_usu[nombre], Cliente): # MENU DE LOS CLIENTES
                         print('Cliente: ')
@@ -55,5 +66,3 @@ while inicio != 'SALIR':
         case '2':         #El administrador crea los usuarios para su personal
             hotelPOO.crear_usuario('CLIENTE')
 hotelPOO.save()
-
-
