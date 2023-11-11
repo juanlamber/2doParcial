@@ -334,17 +334,25 @@ class Cliente(Usuario):
             if info[1]!= 0:
                 print('{} : ${}'.format(item,info[0]))
         pedido=input('Por favor, ingrese el alimento que desee: ').upper()
+        print('Aviso: debe ingresar una cantidad de hasta 9 items')
         pago, lista= 0, []
         while pedido!='LISTO':
-            if pedido!='SALIR':
+            if pedido=='SALIR':
                 return
             while pedido not in hotelPOO.dict_buffet.keys():
                 print('{} no se encuentra en nuestro menu.'.format(pedido))
-            cantidad=input('Ingrese la cantidad que desee: ')
-            if cantidad>hotelPOO.dict_buffet[pedido][1]:
-                cantidad= input('Actualmente no podemos ofrecerle {} {}, puede solicitar como mucho {} {}'.format(pedido,cantidad,hotelPOO.dict_buffet[pedido][1],pedido))
-            pago+=hotelPOO.dict_buffet[pedido][0]*cantidad
-            lista.append((pedido, cantidad))
+                pedido=input('Por favor, ingrese el alimento que desee: ').upper()
+            cantidad=es_digito(1,'numero de articulos')
+            if cantidad=='SALIR':
+                return
+            while int(cantidad)>hotelPOO.dict_buffet[pedido][1]:
+                print('Actualmente no podemos ofrecerle {} {}, puede solicitar como mucho {} {}'.format(pedido,cantidad,hotelPOO.dict_buffet[pedido][1],pedido))
+                cantidad=es_digito(1,'numero de articulos')
+                if cantidad=='SALIR':
+                    return
+            pago+=hotelPOO.dict_buffet[pedido][0]*int(cantidad)
+            hotelPOO.dict_buffet[pedido][1]-=int(cantidad)
+            lista.append((pedido, int(cantidad)))
             pedido=input('Por favor, ingrese el alimento que desee o ingrese "LISTO" para finalizar la compra: ').upper()
         print('Su pedido total es:')
         for i in lista:
@@ -405,7 +413,7 @@ class Almacen:
         if ingrediente not in hotelPOO.dict_buffet.keys():
             precio=input('Este ingrediente no se encuentra en el buffet. Ingrese un precio de venta')
             while precio.isdigit()==False:
-                precio=input('Este ingrediente no se encuentra en el buffet. Ingrese un precio de venta')
+                precio=input('por favor, ingrese un valor valido')
             hotelPOO.dict_buffet[ingrediente]=[int(precio),cantidad]
         hotelPOO.dict_buffet[ingrediente][1]+=cantidad
 

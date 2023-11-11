@@ -7,9 +7,9 @@ def es_digito(largo, dato):
     valor = input("Ingrese un {}: ".format(dato))
     while valor.isdigit()==False or len(valor)!=largo:
         if valor.upper()=='SALIR':                                               ##EN EL MENU DEBEMOS ACLARAR QUE PARA SALIR DEL MENU, DEBE ESCRIBIR 'SALIR'
-            break
+            return 'SALIR'
         valor = input('El {} ingresado no es valido, por favor, intentelo nuevamente: '.format(dato))
-    return valor
+    return str(abs(int(valor)))
 
 
 def contiene(caracter, dato, cantidad):
