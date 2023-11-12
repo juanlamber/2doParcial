@@ -100,12 +100,12 @@ class ListaEnlazada:
 ##MAIN.PY
 
 class Hotel:                                                    #atributos de instancia, ya que la compania puede tener mas de un hotel.
-    def __init__(self, check_in, check_out, admin = None, metodos_pago = [], dict_usu = {}, lista_personal = ListaEnlazada(), lista_clientes_activos = ListaEnlazada(), dict_habitacion = {}, dict_buffet = {}):                   #Deberiámos hacer una matriz para los informes estadísticos?
-        self.habitaciones = dict_habitacion
+    def __init__(self, check_in, check_out, admin = None, dict_usu = {}, lista_personal = ListaEnlazada(), lista_clientes_activos = ListaEnlazada(), dict_habitacion = {}, dict_buffet = {}):                   #Deberiámos hacer una matriz para los informes estadísticos?
+        self.dict_habitacion = dict_habitacion
         self.dict_usu = dict_usu
         self.lista_personal = lista_personal
         self.lista_clientes_activos = lista_clientes_activos
-        self.metodos_pago = metodos_pago                         
+        self.metodos_pago = ['TARJETA DE CREDITO', 'TARJETA DE DEBITO', 'EFECTIVO', 'TRANSFERENCIA BANCARIA', 'CHEQUE', 'CRIPTOMONEDAS']                        
         self.check_in = check_in
         self.check_out = check_out
         self.admin=admin
@@ -115,7 +115,9 @@ class Hotel:                                                    #atributos de in
         self.tareas=['Limpiar recepcion','Limpiar cuartos','No anda la ducha, llamar a al personal de mantenimiento'
                      ,'Limpiar pasillos', 'Solicitar presupuesto', 'Hacer balance de gastos','Pagar a proovedor','Control del estado de la piscina']
         self.dict_buffet=dict_buffet
-        
+        self.almacen=None
+        self.nrofactura=1
+    
     def asignar_admin(self, nombre_admin):         #SE ASIGNA AL INICIAR EL PROGRAMA
         self.admin = nombre_admin
         
@@ -187,7 +189,7 @@ class Hotel:                                                    #atributos de in
         '''
         Agrega un medio de pago disponible.
         '''
-        self.metodos_pago.append(medio)
+        self.metodos_pago.add(medio)
         
                 
     def elegir_fechas(self):                ##????????????????
@@ -199,6 +201,41 @@ class Hotel:                                                    #atributos de in
     def save(self):
             with open('hotelPOO.pickle','wb') as f:
                 pickle.dump(file=f,obj=self)
+
+   
+    def informe_estadistico(self):
+        opcion= input('''
+        Ingrese 
+        "1" para obtener el porcentaje de ocupacion del hotel
+        "2" para obtener el porcentaje de ocupacion de acuerdo a la categoría de las habitaciones
+        ''')
+        ocupado = list(filter(lambda habitacion: [intervalo_superpuesto((reserva.fecha_inicio, reserva.fecha_fin), (datetime.now(), datetime.now()))==False for reserva in habitacion.lista_reservas], self.dict_habitacion.values()))
+        match opcion:
+            case "1":
+                
+                porcen = (len(ocupado) / len(self.dict_habitacion.keys()))*100
+                print("El porcentaje de habitaciones ocupadas en total es {}".format(porcen))
+                
+            case "2":
+                for cat in ('SIMPLE', 'SUITE', 'FAMILIAR', 'DOBLE'):
+                    cant_categoria = list(filter(lambda habitacion: habitacion.categoria == cat, ocupado))
+                    if len(cant_categoria)!=0:
+                        porcen_categoria = (len(cant_categoria) / len(self.dict_habitacion.keys()))*100
+                        print("El porcentaje de habitaciones ocupadas del tipo {} es {}".format(cat, porcen_categoria))
+                    else:
+                        print("No tiene habitaciones ocupadas del tipo", cat)
+            case "3": #Tipos: bronce 1-5000, oro 5000-20000, diamante +20000
+                lista_clientes_historicos = list(filter(lambda usuario: isinstance(usuario, Cliente), self.dict_usu.values()))
+                lista_tipo = list(filter(lambda cliente: [sum(np.array(reserva.monto_total for reserva in cliente.historialreserva))], lista_clientes_historicos))
+                
+                for tipo in ('BRONCE', 'ORO', 'DIAMANTE'):
+                    
+                    monto = 0
+                    # for reserva in lista_reservas:
+                    #     monto += monto_total
+                    print(lista_tipo)
+                pass
+
 class Usuario:                                  #metodo cambiar contraseña
     def __init__(self, nombre, apellido, dni, telefono, mail, direccion, nombre_usu, contrasenna):
         self.nombre_usu=nombre_usu
@@ -244,7 +281,7 @@ class Personal(Usuario):
         mes = str(fecha_ingreso.month)
         fecha_egreso=datetime.now()
         self.dict_ingreso_egreso[mes].append((fecha_ingreso, fecha_egreso)) 
-   
+       
    
 class Personal_Administrativo(Personal):
     def __init__(self, nombre, apellido, dni, telefono, mail, direccion, nombre_usu, contrasenna):
@@ -324,6 +361,9 @@ class Cliente(Usuario):
             print(str(reserva.nro) + '\t' + fecha_i + '\t' + fecha_f + '\t' + str(reserva.monto_total))
                         
     def pedido_buffet(self,hotelPOO):
+        '''
+        Este metodo permite al usuario llevar a cabo un pedido en el buffet del hotel. 
+        '''
         try:
             reservaactual=list(filter(lambda reserva: intervalo_superpuesto((reserva.fecha_inicio, reserva.fecha_fin),(datetime.now(), datetime.now()))==False,self.historialreserva))[0]
         except IndexError:
@@ -346,7 +386,7 @@ class Cliente(Usuario):
             if cantidad=='SALIR':
                 return
             while int(cantidad)>hotelPOO.dict_buffet[pedido][1]:
-                print('Actualmente no podemos ofrecerle {} {}, puede solicitar como mucho {} {}'.format(pedido,cantidad,hotelPOO.dict_buffet[pedido][1],pedido))
+                print('Actualmente no podemos ofrecerle {} {}, puede solicitar como mucho {} {}'.format(cantidad, pedido, hotelPOO.dict_buffet[pedido][1], pedido))
                 cantidad=es_digito(1,'numero de articulos')
                 if cantidad=='SALIR':
                     return
@@ -354,11 +394,23 @@ class Cliente(Usuario):
             hotelPOO.dict_buffet[pedido][1]-=int(cantidad)
             lista.append((pedido, int(cantidad)))
             pedido=input('Por favor, ingrese el alimento que desee o ingrese "LISTO" para finalizar la compra: ').upper()
-        print('Su pedido total es:')
-        for i in lista:
-            print('{} - {}'.format(i[1],i[0]))
-        print('El monto a pagar es $', pago)
-        reservaactual.monto_total+=pago
+        if lista !=[]:
+            print('Su pedido total es:')
+            for i in lista:
+                print('{} - {}'.format(i[1],i[0]))
+            print('El monto a pagar es $', pago)
+            print('Se aceptan los siguientes metodos de pago: ')
+            for metodo in hotelPOO.metodos_pago:
+                print(metodo)
+            metodopago=input('Ingrese algun metodo de pago:')
+            while metodopago not in hotelPOO.metodos_pago:            
+                print('Se aceptan los siguientes metodos de pago: ')
+                for metodo in hotelPOO.metodos_pago:                 #SOLUCIONAR ESTO!!!!!!!, NO ENTRA MUESTRA TODOS LOS METODOS POSIBLES, CAMBIE EL SET POR UNA LISTA EN EL HOTEL. 
+                    print(metodo)
+                metodopago=input('Ingrese algunos de los metodos de pago : '+'\n')
+
+            reservaactual.monto_total+=pago
+            return metodopago,lista,pago
         
 
 class Reserva:
@@ -385,6 +437,9 @@ class Habitacion:
         self.lista_reservas = []
         
     def asignar_habitacion(self, inter, usuario):
+        '''
+        Le asigna una reserva a un usuario determinado, confirmando la transaccion.
+        '''
         nro_reserva=usuario.nombre_usu + ' ' + str(len(usuario.historialreserva))
         reserva=Reserva(nro_reserva, inter[0] ,inter[1])
         self.lista_reservas.append(reserva)
@@ -393,21 +448,30 @@ class Habitacion:
         print('La operacion ha sido exitosa. Usted ha reservado la habitacion {} con las siguientes comodidades: {}, {}, {}, {}; desde el {} al {} con un total de ${}'
               .format(self.nro, self.categoria, self.capacidad, self.banio, self.balcon, datetime.strftime(inter[0],'%d de %b del %Y'), datetime.strftime(inter[1],'%d de %b del %Y'), reserva.monto_total))
         print('Su número de reserva es: ', nro_reserva)
-        print(self.lista_reservas)
+
 
 class Almacen:
     def __init__(self, pila_ingredientes=deque()):
         self.pila_ingredientes=pila_ingredientes
         
     def agregar_ingredientes(self):
-        ingrediente=input('Ingrese el ingrediente que desea comprar: ')
+        '''
+        Le permite a un administrador agregar almentos nuevos al hotel. 
+        '''
+        ingrediente=input('Ingrese el alimento que desea comprar: ')
         cantidad= input('Ingrese la cantidad de {}: '.format(ingrediente))
         while cantidad.isdigit()==False:
-            cantidad= input('Porfavor ingrese ua cantidad cantidad de {} valida '.format(ingrediente)) #ACA SE REGISTRAN LOS INGREDIENTES QUE INGRESAN AL ALMACEN
+            cantidad= input('Porfavor ingrese una cantidad de {} valida '.format(ingrediente)) #ACA SE REGISTRAN LOS INGREDIENTES QUE INGRESAN AL ALMACEN
         self.pila_ingredientes.append((ingrediente,int(cantidad)))
         print('Se registraron {} {}.'.format(cantidad,ingrediente))
     
     def agregar_stock(self, hotelPOO):
+        '''
+        Le permite a un administrador agregar stock de algun alimento ya existente al hotel. 
+        '''
+        if len(self.pila_ingredientes)==0:
+            print('La pila de stock se encuentra vacia')
+            return
         stock=self.pila_ingredientes.pop()
         ingrediente, cantidad= stock[0], stock[1]
         if ingrediente not in hotelPOO.dict_buffet.keys():
@@ -418,6 +482,9 @@ class Almacen:
         hotelPOO.dict_buffet[ingrediente][1]+=cantidad
 
 def ingresar_persona(): 
+    '''
+    Le permite al administrador agregar una persona nueva al sistema. 
+    '''
     nombre = input("Ingrese un nombre: ")         ##COMO HACEMOS SI EL USUARIO INGRESA 'SALIR' EN CUALQUIERA DE LOS RENGLONES???
     apellido = input("Ingrese un apellido: ")
     dni = es_digito(8,'Dni')

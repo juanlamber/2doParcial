@@ -9,7 +9,7 @@ def es_digito(largo, dato):
         if valor.upper()=='SALIR':                                               ##EN EL MENU DEBEMOS ACLARAR QUE PARA SALIR DEL MENU, DEBE ESCRIBIR 'SALIR'
             return 'SALIR'
         valor = input('El {} ingresado no es valido, por favor, intentelo nuevamente: '.format(dato))
-    return str(abs(int(valor)))
+    return valor
 
 
 def contiene(caracter, dato, cantidad):
@@ -62,7 +62,10 @@ def ingresar_fecha():
             if fecha.upper()=='SALIR':
                 return 'SALIR'
             fecha=datetime.strptime(fecha, '%Y-%m-%d')
-            # if date(fecha)<date.now():
+            if date(fecha.year,fecha.month,fecha.day)<date.today():
+                print('Por favor ingrese una fecha posterior a la de hoy: ')
+                fecha=None
+            # if date(fecha)<date.today():
             #     print('Por favor ingrese una fecha posterior a la de hoy: ')
             #     fecha=None
         except ValueError:

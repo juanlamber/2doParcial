@@ -12,9 +12,10 @@ from collections import deque
 try:
     with open('hotelPOO.pickle','rb') as f:
         hotelPOO=pickle.load(f)
+        AlmacenPOO=hotelPOO.almacen
 except:
-    hotelPOO = Hotel('2', '3')
-    AlmacenPOO=Almacen()   
+    hotelPOO = Hotel('11', '15')
+    hotelPOO.almacen=Almacen()
     hotelPOO.dict_habitacion= {'100':Habitacion(100,'SIMPLE',2,'CON BAÑO','CON BALCON',100), 
                             '101':Habitacion(101,'SIMPLE',2, 'SIN BAÑO', 'SIN BALCON', 50), 
                            '200':Habitacion(200,'DOBLE',4,'CON BAÑO','CON BALCON',200),

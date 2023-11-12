@@ -16,6 +16,7 @@ def menu_cliente( hotel, usuario):
     ''')
     match inicio_sub:
         case '1':
+            print('Las reservas en el hotel POO admiten un check in a partir de las '+hotel.check_in+' y un check out hasta las '+ hotel.check_out)
             pedido=ingresar_reserva()           ##COMENTAR BIEN
             if pedido!=None:
                 list_filtrado = list(filter(lambda habitacion: list(vars(habitacion).values())[2:6] == pedido[0:4], hotel.dict_habitacion.values()))  #En esta lista se filtran las habitaciones que cumplan con todos los requisitos del pedido
@@ -34,7 +35,8 @@ def menu_cliente( hotel, usuario):
             usuario.visualizar_reservas()
             pass
         case '3':
-            usuario.pedido_buffet(hotel)
+            metodopago,lista,pago=usuario.pedido_buffet(hotel)
+            generar_factura(pago,lista,usuario,metodopago,hotel)
         
     return inicio_sub
 
@@ -53,6 +55,7 @@ def menu_admin(hotelPOO, usuario):
     "7" si desea visualizar los ingresos y egresos de algun empleado
     "8" si desea visualizar la nómina de los clientes activos
     "9" si desea visualizar los medios de pago disponibles y/o agregar uno
+    "10" si desea visualizar el informe estadístico
 
     "SALIR" si desea salir del programa. 
     ''')
@@ -101,6 +104,8 @@ def menu_admin(hotelPOO, usuario):
             if valor == 1:
                 medio = input("Ingrese el medio a agregar: ")
                 hotelPOO.agregar_medio_pago(medio)
+        case '10':
+            hotelPOO.informe_estadistico()
     
     return inicio_sub
 
