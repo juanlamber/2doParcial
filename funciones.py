@@ -1,9 +1,13 @@
 from validaciones import *
 from CLASES import *
 ##FUNCIONES.PY
-'''Esta funcion la utilizamos en diferentes ocaciones parra crear usuarios de cualquier tipo
-'''
-def ingresar_persona(): 
+
+
+
+def ingresar_persona():
+    '''
+    Esta funcion la utilizamos en diferentes ocaciones parra crear usuarios de cualquier tipo
+    ''' 
     nombre = input("Ingrese un nombre: ")        
     apellido = input("Ingrese un apellido: ")
     dni = es_digito(8,'Dni')            #chequeamos que el dni tenga 8 digitos y que sean digitos

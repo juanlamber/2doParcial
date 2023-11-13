@@ -6,7 +6,7 @@ def es_digito(largo, dato):
     """
     valor = input("Ingrese un {}: ".format(dato))
     while valor.isdigit()==False or len(valor)!=largo:
-        if valor.upper()=='SALIR':                                               ##EN EL MENU DEBEMOS ACLARAR QUE PARA SALIR DEL MENU, DEBE ESCRIBIR 'SALIR'
+        if valor.upper()=='SALIR':                                              
             return 'SALIR'
         valor = input('El {} ingresado no es valido, por favor, intentelo nuevamente: '.format(dato))
     return valor
@@ -18,7 +18,7 @@ def contiene(caracter, dato, cantidad):
     """
     cad = input('Ingrese un {}: '.format(dato))
     while cad.count(caracter)!=cantidad:
-        if cad.upper()=='SALIR':                                               ##EN EL MENU DEBEMOS ACLARAR QUE PARA SALIR DEL MENU, DEBE ESCRIBIR 'SALIR'
+        if cad.upper()=='SALIR':                                               
             break
         cad = input('El {} ingresado no es valido, por favor, intentelo nuevamente: '.format(dato))
     return cad
@@ -72,7 +72,8 @@ def ingresar_fecha():
     return fecha
 
 def fecha_valida(fecha_i):
-    '''esta funcion la utlizamos para validar que la fecha de salida sea mayor que la fecha de inicio
+    '''
+    Esta funcion la utlizamos para validar que la fecha de salida sea mayor que la fecha de inicio
     '''
     fecha_f=ingresar_fecha()
     if fecha_i=='SALIR' or fecha_f=='SALIR':
@@ -83,7 +84,10 @@ def fecha_valida(fecha_i):
     return fecha_f
 
 
-def intervalo_superpuesto(intervalo_padre, intervalo_hijo): # Esta funcion comprueba si el intervalo hijo está contenido en el intervalo padre
+def intervalo_superpuesto(intervalo_padre, intervalo_hijo):
+    '''
+    Esta funcion comprueba si el intervalo hijo está contenido en el intervalo padre
+    '''
     inicio_padre, fin_padre = intervalo_padre
     inicio_hijo, fin_hijo = intervalo_hijo
     if fin_padre < inicio_hijo or fin_hijo < inicio_padre:

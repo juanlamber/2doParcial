@@ -207,11 +207,6 @@ class Hotel:                                                    #atributos de in
             print('La opción ingresada no es válida')
         
                 
-    # def elegir_fechas(self):              
-    #     '''
-    #     Método que permite al usuario ingresar las fechas de inicio y fin de su reserva.
-    #     '''
-    #     self.fecha_inicio = datetime.strptime(input('Ingrese la fecha en la que desea iniciar su reserva, en el formato YYYY-mm-dd. '), "%Y-%m-%d")
 
     def save(self):
         '''
