@@ -26,8 +26,8 @@ def ingresar_reserva():
         capacidad= int(es_digito(1,'Numero de capacidad valido (1-5)'))
     except ValueError:
         capacidad= None
-    banio= dato_en_lista('si desea tener baño propio (CON BAÑO) o sin baño propio (SIN BAÑO): ', ('CON BAÑO', 'SIN BAÑO'))
-    balcon= dato_en_lista('si desea tener balcon (CON BALCON) o sin balcon (SIN BALCON): ', ('CON BALCON', 'SIN BALCON'))
+    banio= dato_en_lista('si desea tener baño propio (CON BAÑO) o sin baño propio (SIN BAÑO) ', ('CON BAÑO', 'SIN BAÑO'))
+    balcon= dato_en_lista('si desea tener balcon (CON BALCON) o sin balcon (SIN BALCON) ', ('CON BALCON', 'SIN BALCON'))
     print('Ingrese el intervalo de tiempo que se quedara: ')
     print('Fecha de llegada: ')
     fecha_ingreso= ingresar_fecha()
@@ -64,19 +64,16 @@ def generar_factura(pago,lista,usuario,metodopago,hotelPOO):
     '''
     nombrearchivo=str(hotelPOO.nrofactura)
     f=open(nombrearchivo,'w')
-    f.write('Numero de factura: '+nombrearchivo+'\n')
-    f.write(usuario.nombre+'\t'+usuario.apellido+'\n')
-    f.write(usuario.dni+'\n')
+    f.write('Numero de factura: '+ nombrearchivo +'\n')
+    f.write(usuario.nombre+'\t'+ usuario.apellido +'\n')
+    f.write(usuario.dni + '\n')
     f.write('Metodo de pago: '+metodopago+'\n')
     for elemento in range(len(lista)):
-        f.write('Producto: '+ lista[elemento][0]+'\t'+'Cantidad: '+lista[elemento][1]+'\t'+'Precio unitario: '+hotelPOO.dict_buffet[lista[elemento][0]][0])
-    f.write('\n'+"El monto total es: "+str(pago))
+        f.write('Producto: '+ lista[elemento][0]+'\t'+'Cantidad: '+ str(lista[elemento][1])+'\t'+'Precio unitario: '+str(hotelPOO.dict_buffet[lista[elemento][0]][0])+'\n')
+    f.write('\n'+"El monto total es: " + str(pago))
     f.close()
+    hotelPOO.nrofactura+=1
 
-    #lista =[(pedido,cant)]
-    #dic={"pedido": [precio,stock]}
-    
-    #pago total
-    
+
 
     
